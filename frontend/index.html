@@ -15,8 +15,8 @@
     <title>Senjclipper</title>
   </head>
   <body>
-    <div class="w-100 h-100">
-      <section class="w-50 h-100 bg-red">
+    <div class="w-100 h-100 flex flex-col">
+      <section class="w-50 h-50 bg-red">
         <div class="h-50">
           <h4 class="text-sm text-yellow">Youtube ID:</h4>
           <h4 class="text-sm">Status: <code>Downloading..</code></h4>
@@ -26,9 +26,20 @@
             <button>Download</button>
           </div>
         </div>
-        <div class="h-50 bg-green">stuff</div>
+        <div class="h-50 bg-green flex items-center justify-center flex-col">
+          <h4 class="text-center">Current File: &nbsp;<code>myre/desktop/video.mp3</code></h4>
+          <button>Load File</button>
+          <div class="flex items-center justify-center">
+            <label class="text-sm">Start Time:</label>
+            <input class="rounded" /> 
+            <label class="text-sm">End Time:</label>
+            <input class="rounded" />
+        </div>
+        <button>Clip Video</button>
+        <button>Clip Video with Subtitles</button>
+          </div>
       </section>
-      <section class="w-50 h-100"></section>
+      <section class="w-50 h-50"></section>
     </div>
   </body>
 </html>
