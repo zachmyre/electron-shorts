@@ -1,8 +1,13 @@
 // npx electronmon .
-const { app, BrowserWindow } = require('electron')
+const { app, BrowserWindow } = require('electron');
+const path = require('path');
 
 const createWindow = () => {
   const win = new BrowserWindow({
+    webPreferences: {
+      nodeIntegration: true,
+      contextIsolation: false,
+    },
     width: 800,
     height: 500,
   })

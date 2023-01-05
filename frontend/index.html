@@ -2,49 +2,45 @@
 <html>
   <head>
     <meta charset="UTF-8" />
-    <!-- https://developer.mozilla.org/en-US/docs/Web/HTTP/CSP -->
-    <meta
-      http-equiv="Content-Security-Policy"
-      content="default-src 'self'; script-src 'self'"
-    />
-    <meta
-      http-equiv="X-Content-Security-Policy"
-      content="default-src 'self'; script-src 'self'"
-    />
-    <link rel="stylesheet" href="./css/styles.css" />
+    <script src="https://cdn.tailwindcss.com"></script>
     <title>Senjclipper</title>
   </head>
   <body>
-    <div class="w-100 h-100 flex flex-row">
-      <section class="w-50 bg-red">
-        <div class="h-50">
-          <h4 class="text-sm text-yellow">Youtube ID:</h4>
-          <h4 class="text-sm">Status: <code>Downloading..</code></h4>
-          <div class="flex flex-col">
-            <h4 class="text-sm m-0">Enter youtube link:</h4>
-            <input class="rounded" type="text" />
-            <button>Download</button>
-          </div>
+    <div
+      class="w-full h-full text-white flex flex-col align-center justify-center text-center"
+    >
+      <section class="space-y-4">
+        <div class="space-y-2 bg-gray-900">
+          <h6 class="text-green-500 font-bold">Status:</h6>
+          <code class="font-medium" id="youtube_status"></code>
+          <h6 class="text-yellow-500 font-bold">
+            Youtube ID (required for subtitles):
+          </h6>
+          <code class="font-medium" id="youtube_id"></code>
         </div>
-        <div class="bg-green flex items-center justify-center flex-col">
-          <h4 class="text-center">Current File: &nbsp;<code>myre/desktop/video.mp3</code></h4>
-          <button>Load File</button>
-          <div class="flex items-center justify-center">
-            <label class="text-sm">Start Time:</label>
-            <input class="rounded" /> 
-            <label class="text-sm">End Time:</label>
-            <input class="rounded" />
+        <div
+          class="w-full flex flex-col items-center justify-center px-12 space-x-4 space-y-2"
+        >
+          <h6 class="text-blue-500 font-medium">Enter youtube link:</h6>
+          <input
+            id="youtube_video_input"
+            type="text"
+            class="shadow appearance-none border rounded w-1/2 py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+            value="https://www.youtube.com/watch?v=ouO6-j5_PDw&ab_channel=PowerfulJRE"
+          />
+          <button
+            id="youtube_download_btn"
+            class="w-1/4 bg-blue-500 hover:bg-blue-700 text-white font-bold py-1 px-2 rounded"
+          >
+            Download
+          </button>
         </div>
-        <button>Clip Video</button>
-        <button>Clip Video with Subtitles</button>
-          </div>
-      </section>
-      <section class="w-50 bg-yellow">
-        <button>Load</button>
-        <video height="75%" width="100%">
-          <source src="../assets/video.mkv" type="video/mp4">
-      </video>
+        <div class="bg-gray-900">
+          <h1 class="text-xl">Clip Video</h1>
+          <div class="flex items-center justify-center"></div>
+        </div>
       </section>
     </div>
   </body>
+  <script src="../renderer.js"></script>
 </html>
