@@ -26,8 +26,8 @@ youtube_id.innerHTML = "null";
 
 youtube_download_btn.addEventListener('click', async () => {
     try{
-        fs.unlinkSync("./assets/out.mp4");
-        fs.unlinkSync('./assets/video_out.mp4');
+        // fs.unlinkSync("./assets/out.mp4");
+        // fs.unlinkSync('./assets/video_out.mp4');
     }catch(error){
         console.log('unlinkSync catch');
         console.log(error);
@@ -42,7 +42,7 @@ youtube_download_btn.addEventListener('click', async () => {
     youtube_id.innerHTML = youtube_data.id;
     youtube_status.className = '';
     youtube_status.innerHTML = "id acquired."
-    await download_video(youtube_data.url);
+    // await download_video(youtube_data.url);
     const pythonProcess = cp.spawn('python',["./transcribe.py", youtube_data.id]);
     const json_text = await axios.get("../assets/text.json");
     youtube_data.subtitles = json_text.data;
@@ -65,6 +65,26 @@ youtube_clip_btn.addEventListener("click", () => {
         if(!err) { console.log('conversion Done') }
     })
     .on('error', err => console.log('error: ', err))
+    .complexFilter([{
+        filter: 'drawtext',
+        options: {
+            fontsize: 60,
+            text: 'this is random text',
+            fontcolor: 'white',
+            boxcolor: 'black',
+            box: 1
+        }
+    },
+    {
+        filter: 'drawtext',
+        options: {
+            fontsize: 25,
+            text: 'RAWRRRRRRRRRRRRR',
+            fontcolor: 'white',
+            boxcolor: 'black',
+            box: 1
+        }
+    }])
     .run()
 })
 
