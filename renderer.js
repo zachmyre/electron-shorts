@@ -7,6 +7,10 @@ const ffmpegPath = require('@ffmpeg-installer/ffmpeg').path;
 const fluent_ffmpeg = require('fluent-ffmpeg');
 const axios = require('axios');
 
+
+// https://stackoverflow.com/questions/35848367/adding-subtitles-with-fluent-ffmpeg
+
+
 const youtube_status = document.getElementById('youtube_status');
 const youtube_id = document.getElementById('youtube_id');
 const youtube_video_input = document.getElementById('youtube_video_input');
@@ -70,16 +74,8 @@ youtube_clip_btn.addEventListener("click", () => {
         options: {
             fontsize: 60,
             text: 'this is random text',
-            fontcolor: 'white',
-            boxcolor: 'black',
-            box: 1
-        }
-    },
-    {
-        filter: 'drawtext',
-        options: {
-            fontsize: 25,
-            text: 'RAWRRRRRRRRRRRRR',
+            // timecode: '00:00:05',
+            // timecode_rate: 1,
             fontcolor: 'white',
             boxcolor: 'black',
             box: 1
