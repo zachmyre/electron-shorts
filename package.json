@@ -12,8 +12,10 @@
     "electron": "^22.0.0"
   },
   "dependencies": {
+    "@ffmpeg-installer/ffmpeg": "^1.1.0",
     "axios": "^1.2.2",
     "ffmpeg-static": "^5.1.0",
+    "fluent-ffmpeg": "^2.1.2",
     "youtube-transcript": "^1.0.4",
     "ytdl-core": "^4.11.2"
   }

@@ -3,36 +3,74 @@ const ytdl = require('ytdl-core');
 const cp = require('child_process');
 const readline = require('readline');
 const ffmpeg = require('ffmpeg-static');
+const ffmpegPath = require('@ffmpeg-installer/ffmpeg').path;
+const fluent_ffmpeg = require('fluent-ffmpeg');
 const axios = require('axios');
 
 const youtube_status = document.getElementById('youtube_status');
 const youtube_id = document.getElementById('youtube_id');
 const youtube_video_input = document.getElementById('youtube_video_input');
+const youtube_download_btn = document.getElementById('youtube_download_btn');
+const youtube_start_input = document.getElementById('start_time');
+const youtube_end_input = document.getElementById('end_time');
+const youtube_clip_btn = document.getElementById('youtube_clip_btn');
+var youtube_data = {
+    url: '',
+    id: '',
+    subtitles: ''
+}
+var transcribed_audio;
 youtube_status.innerHTML = "ready for action.";
 youtube_id.innerHTML = "null";
 
-const youtube_download_btn = document.getElementById('youtube_download_btn');
-var transcribed_audio;
+
 youtube_download_btn.addEventListener('click', async () => {
-    const youtube_url = youtube_video_input.value;
-    const id = getYoutubeID(youtube_url);
-    if (!id) {
+    try{
+        fs.unlinkSync("./assets/out.mp4");
+        fs.unlinkSync('./assets/video_out.mp4');
+    }catch(error){
+        console.log('unlinkSync catch');
+        console.log(error);
+    }
+    youtube_data.url = youtube_video_input.value;
+    youtube_data.id = getYoutubeID(youtube_data.url);
+    if (!youtube_data.id) {
         youtube_status.className = "text-red-500";
         youtube_status.innerHTML = "Invalid link, please use youtube links only.";
         return;
     }
-    youtube_id.innerHTML = id;
+    youtube_id.innerHTML = youtube_data.id;
     youtube_status.className = '';
     youtube_status.innerHTML = "id acquired."
-    // download_video(youtube_url);
-    const pythonProcess = cp.spawn('python',["./transcribe.py", id]);
+    await download_video(youtube_data.url);
+    const pythonProcess = cp.spawn('python',["./transcribe.py", youtube_data.id]);
     const json_text = await axios.get("../assets/text.json");
-    console.log(json_text.data);
+    youtube_data.subtitles = json_text.data;
+    console.log(youtube_data.subtitles);
+    youtube_status.innerHTML = "Subtitles acquired";
+})
+
+youtube_clip_btn.addEventListener("click", () => {
+    if(!youtube_data.url){
+        youtube_status.className = "text-red-500";
+        youtube_status.innerHTML = "You must download a youtube video first!";
+        return;
+    }
+    fluent_ffmpeg.setFfmpegPath(ffmpegPath);
+    fluent_ffmpeg('./assets/out.mp4')
+    .setStartTime(`${youtube_start_input.value}`)
+    .setDuration(youtube_end_input.value-youtube_start_input.value)
+    .output('./assets/video_out.mp4')
+    .on('end', function(err) {
+        if(!err) { console.log('conversion Done') }
+    })
+    .on('error', err => console.log('error: ', err))
+    .run()
 })
 
 
 function download_video(youtube_url) {
-
+    return new Promise(function(resolve, reject) {
     const ref = youtube_url;
     const tracker = {
         start: Date.now(),
@@ -103,6 +141,7 @@ function download_video(youtube_url) {
         youtube_status.innerHTML = "Done!"
         youtube_video_input.value = '';
         clearInterval(progressbarHandle);
+        resolve();
     });
 
     // Link streams
@@ -121,6 +160,7 @@ function download_video(youtube_url) {
     });
     audio.pipe(ffmpegProcess.stdio[4]);
     video.pipe(ffmpegProcess.stdio[5]);
+})
 }
 
 function getYoutubeID(url) {

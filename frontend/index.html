@@ -13,9 +13,7 @@
         <div class="space-y-2 bg-gray-900">
           <h6 class="text-green-500 font-bold">Status:</h6>
           <code class="font-medium" id="youtube_status"></code>
-          <h6 class="text-yellow-500 font-bold">
-            Youtube ID (required for subtitles):
-          </h6>
+          <h6 class="text-yellow-500 font-bold">Youtube ID:</h6>
           <code class="font-medium" id="youtube_id"></code>
         </div>
         <div
@@ -35,9 +33,32 @@
             Download
           </button>
         </div>
-        <div class="bg-gray-900">
+        <div class="bg-gray-900 py-4">
           <h1 class="text-xl">Clip Video</h1>
-          <div class="flex items-center justify-center"></div>
+          <div class="flex flex-col items-center justify-center space-y-4 mt-2">
+            <div>
+              <h6>Start:</h6>
+              <input
+                id="start_time"
+                class="shadow appearance-none border rounded w-1/2 py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                type="text"
+              />
+            </div>
+            <div>
+              <h6>End:</h6>
+              <input
+                id="end_time"
+                class="shadow appearance-none border rounded w-1/2 py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                type="text"
+              />
+            </div>
+            <button
+              id="youtube_clip_btn"
+              class="w-1/4 bg-blue-500 hover:bg-blue-700 text-white font-bold py-1 px-2 rounded mt-4"
+            >
+              Clip with Subtitles
+            </button>
+          </div>
         </div>
       </section>
     </div>
