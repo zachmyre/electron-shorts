@@ -6,6 +6,7 @@ const ffmpeg = require('ffmpeg-static');
 const ffmpegPath = require('@ffmpeg-installer/ffmpeg').path;
 const fluent_ffmpeg = require('fluent-ffmpeg');
 const axios = require('axios');
+fluent_ffmpeg.setFfmpegPath(ffmpegPath);
 
 
 // https://stackoverflow.com/questions/35848367/adding-subtitles-with-fluent-ffmpeg
@@ -24,14 +25,15 @@ var youtube_data = {
     subtitles: ''
 }
 var transcribed_audio;
-youtube_status.innerHTML = "ready for action.";
-youtube_id.innerHTML = "null";
+setStatus("Ready for war.");
+youtube_id.innerHTML = "none";
 
 
 youtube_download_btn.addEventListener('click', async () => {
     try{
-        // fs.unlinkSync("./assets/out.mp4");
-        // fs.unlinkSync('./assets/video_out.mp4');
+        fs.unlinkSync("./assets/out.mp4");
+        fs.unlinkSync('./assets/test.mp4');
+        fs.unlinkSync('./assets/text.srt')
     }catch(error){
         console.log('unlinkSync catch');
         console.log(error);
@@ -39,36 +41,44 @@ youtube_download_btn.addEventListener('click', async () => {
     youtube_data.url = youtube_video_input.value;
     youtube_data.id = getYoutubeID(youtube_data.url);
     if (!youtube_data.id) {
-        youtube_status.className = "text-red-500";
-        youtube_status.innerHTML = "Invalid link, please use youtube links only.";
+         setStatus("Invalid link, please use youtube links only.", true);
         return;
     }
     youtube_id.innerHTML = youtube_data.id;
     youtube_status.className = '';
-    youtube_status.innerHTML = "id acquired."
-    // await download_video(youtube_data.url);
-    const pythonProcess = cp.spawn('python',["./transcribe.py", youtube_data.id]);
-    const json_text = await axios.get("../assets/text.json");
-    youtube_data.subtitles = json_text.data;
-    console.log(youtube_data.subtitles);
-    youtube_status.innerHTML = "Subtitles acquired";
+    setStatus("ID retrieved.")
+    await download_video(youtube_data.url);
+    await generateSubtitles();
+    setStatus("Adding subtitles to video..");
+    fluent_ffmpeg('./assets/out.mp4')
+            .outputOptions(
+                '-vf subtitles=./assets/text.srt'
+            )
+            .on('error', function(err) {
+                console.log('Error: ' + err.message);
+                setStatus("Error adding subtitles: " + err.message, true);
+            })
+            .on('end', () => {
+                console.log('done')
+                setStatus("Done adding subtitles!");
+            })
+            .save('./assets/test.mp4');
 })
 
 youtube_clip_btn.addEventListener("click", () => {
     if(!youtube_data.url){
-        youtube_status.className = "text-red-500";
-        youtube_status.innerHTML = "You must download a youtube video first!";
+        setStatus("You must download a youtube video first!", true);
         return;
     }
-    fluent_ffmpeg.setFfmpegPath(ffmpegPath);
+    
     fluent_ffmpeg('./assets/out.mp4')
     .setStartTime(`${youtube_start_input.value}`)
     .setDuration(youtube_end_input.value-youtube_start_input.value)
     .output('./assets/video_out.mp4')
     .on('end', function(err) {
-        if(!err) { console.log('conversion Done') }
+        if(!err) { setStatus("Clip conversion finished!") }
     })
-    .on('error', err => console.log('error: ', err))
+    .on('error', err => setStatus("Erro on clip conversion: " + err, true))
     .complexFilter([{
         filter: 'drawtext',
         options: {
@@ -117,7 +127,7 @@ function download_video(youtube_url) {
 
         process.stdout.write(`Video  | ${(tracker.video.downloaded / tracker.video.total * 100).toFixed(2)}% processed `);
         process.stdout.write(`(${toMB(tracker.video.downloaded)}MB of ${toMB(tracker.video.total)}MB).${' '.repeat(10)}\n`);
-        youtube_status.innerHTML = `${(tracker.audio.downloaded / tracker.audio.total * 100).toFixed(2)}%`;
+        setStatus(`${(tracker.video.downloaded / tracker.video.total * 100).toFixed(2)}%`);
         process.stdout.write(`Merged | processing frame ${tracker.merged.frame} `);
         process.stdout.write(`(at ${tracker.merged.fps} fps => ${tracker.merged.speed}).${' '.repeat(10)}\n`);
 
@@ -154,7 +164,7 @@ function download_video(youtube_url) {
         console.log('done');
         // Cleanup
         process.stdout.write('\n\n\n\n');
-        youtube_status.innerHTML = "Done!"
+        setStatus("Done downloading video!");
         youtube_video_input.value = '';
         clearInterval(progressbarHandle);
         resolve();
@@ -179,8 +189,22 @@ function download_video(youtube_url) {
 })
 }
 
+function generateSubtitles(){
+    return new Promise((resolve, reject) => {
+        cp.spawn('python',["./transcribe.py", youtube_data.id]);
+        setTimeout(() => {
+            resolve();
+        }, 3000)
+    })
+}
+
 function getYoutubeID(url) {
     var regExp = /^.*((youtu.be\/)|(v\/)|(\/u\/\w\/)|(embed\/)|(watch\?))\??v?=?([^#&?]*).*/;
     var match = url.match(regExp);
     return (match && match[7].length == 11) ? match[7] : false;
+}
+
+function setStatus(status, error = false){
+    youtube_status.className = error ? "text-red-500" : "text-green-500";
+    youtube_status.innerHTML = status;
 }
