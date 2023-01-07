@@ -8,10 +8,10 @@ transcript = YouTubeTranscriptApi.get_transcript(sys.argv[1])
 formatter = SRTFormatter()
 
 # .format_transcript(transcript) turns the transcript into a JSON string.
-json_formatted = formatter.format_transcript(transcript)
+srt_formatted = formatter.format_transcript(transcript)
 
 
 # Now we can write it out to a file.
 with open('./assets/text.srt', 'w', encoding='utf-8') as json_file:
-    json_file.write(json_formatted)
+    json_file.write(srt_formatted)
 sys.stdout.flush()

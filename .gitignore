@@ -128,3 +128,5 @@ dist
 
 *.mp4
 *.json
+*.srt
+.assets/

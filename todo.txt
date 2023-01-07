@@ -1,0 +1,8 @@
+
+Hard:
+-Find ways to get best / most popular part of video
+
+
+Easy:
+-Add hour, minute, second to start / end clip time (convert to seconds)
+-Add loading status to adding subtitles to video.

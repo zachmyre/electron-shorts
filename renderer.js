@@ -194,7 +194,7 @@ function generateSubtitles(){
         cp.spawn('python',["./transcribe.py", youtube_data.id]);
         setTimeout(() => {
             resolve();
-        }, 3000)
+        }, 15000)
     })
 }
 
@@ -208,3 +208,5 @@ function setStatus(status, error = false){
     youtube_status.className = error ? "text-red-500" : "text-green-500";
     youtube_status.innerHTML = status;
 }
+
+1:29:46 to 1:30:07
