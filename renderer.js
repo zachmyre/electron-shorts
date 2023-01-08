@@ -12,6 +12,9 @@ fluent_ffmpeg.setFfmpegPath(ffmpegPath);
 // https://stackoverflow.com/questions/35848367/adding-subtitles-with-fluent-ffmpeg
 
 
+//https://www.youtube.com/watch?v=efs3QRr8LWw&t=2s&ab_channel=PowerfulJRE
+//5386 -> 5407
+
 const youtube_status = document.getElementById('youtube_status');
 const youtube_id = document.getElementById('youtube_id');
 const youtube_video_input = document.getElementById('youtube_video_input');
@@ -71,7 +74,7 @@ youtube_clip_btn.addEventListener("click", () => {
         return;
     }
     
-    fluent_ffmpeg('./assets/out.mp4')
+    fluent_ffmpeg('./assets/test.mp4')
     .setStartTime(`${youtube_start_input.value}`)
     .setDuration(youtube_end_input.value-youtube_start_input.value)
     .output('./assets/video_out.mp4')
@@ -79,18 +82,6 @@ youtube_clip_btn.addEventListener("click", () => {
         if(!err) { setStatus("Clip conversion finished!") }
     })
     .on('error', err => setStatus("Erro on clip conversion: " + err, true))
-    .complexFilter([{
-        filter: 'drawtext',
-        options: {
-            fontsize: 60,
-            text: 'this is random text',
-            // timecode: '00:00:05',
-            // timecode_rate: 1,
-            fontcolor: 'white',
-            boxcolor: 'black',
-            box: 1
-        }
-    }])
     .run()
 })
 
@@ -208,5 +199,3 @@ function setStatus(status, error = false){
     youtube_status.className = error ? "text-red-500" : "text-green-500";
     youtube_status.innerHTML = status;
 }
-
-1:29:46 to 1:30:07

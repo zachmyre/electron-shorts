@@ -4,5 +4,6 @@ Hard:
 
 
 Easy:
+-Make video with best youtube shorts/tiktok resolution
 -Add hour, minute, second to start / end clip time (convert to seconds)
 -Add loading status to adding subtitles to video.
