@@ -69,14 +69,15 @@ youtube_download_btn.addEventListener('click', async () => {
 })
 
 youtube_clip_btn.addEventListener("click", () => {
-    if(!youtube_data.url){
-        setStatus("You must download a youtube video first!", true);
-        return;
-    }
+    // if(!youtube_data.url){
+    //     setStatus("You must download a youtube video first!", true);
+    //     return;
+    // }
     
     fluent_ffmpeg('./assets/test.mp4')
     .setStartTime(`${youtube_start_input.value}`)
     .setDuration(youtube_end_input.value-youtube_start_input.value)
+    .size('1920x1080').aspect('9:16')
     .output('./assets/video_out.mp4')
     .on('end', function(err) {
         if(!err) { setStatus("Clip conversion finished!") }
